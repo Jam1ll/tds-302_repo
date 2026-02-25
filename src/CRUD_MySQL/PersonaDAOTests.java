@@ -145,9 +145,7 @@ public class PersonaDAOTest {
         dao.delete(idInsertado);
     }
 
-        //
-        //Validación de datos de entrada
-        //
+        //VALIDACION DE DATOS DE ENTRADA
         
         public class PersonaDAOValidationTest {
     
@@ -197,9 +195,8 @@ public class PersonaDAOTest {
         }
     }
 
-    //
-    //Manejo de errores y excepciones
-    //
+    //MANEJO DE ERRORES Y EXCEPCIONES
+
 
     public class PersonaDAOExceptionTest {
 
