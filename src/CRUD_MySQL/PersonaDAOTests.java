@@ -144,4 +144,98 @@ public class PersonaDAOTest {
 
         dao.delete(idInsertado);
     }
+
+        //
+        //Validación de datos de entrada
+        //
+        
+        public class PersonaDAOValidationTest {
+    
+        private PersonaDAO personaDAO;
+    
+        @BeforeEach
+        void setUp() {
+            personaDAO = new PersonaDAO();
+        }
+    
+        @Test
+        void testCreatePersonaValida() {
+            Persona persona = new Persona(0, "Juan", 25);
+            assertDoesNotThrow(() -> personaDAO.create(persona));
+        }
+    
+        @Test
+        void testNombreVacio() {
+            Persona persona = new Persona(0, "", 25);
+            assertThrows(IllegalArgumentException.class, () -> {
+                personaDAO.create(persona);
+            });
+        }
+    
+        @Test
+        void testNombreNull() {
+            Persona persona = new Persona(0, null, 25);
+            assertThrows(IllegalArgumentException.class, () -> {
+                personaDAO.create(persona);
+            });
+        }
+    
+        @Test
+        void testEdadNegativa() {
+            Persona persona = new Persona(0, "Ana", -5);
+            assertThrows(IllegalArgumentException.class, () -> {
+                personaDAO.create(persona);
+            });
+        }
+    
+        @Test
+        void testEdadCero() {
+            Persona persona = new Persona(0, "Luis", 0);
+            assertThrows(IllegalArgumentException.class, () -> {
+                personaDAO.create(persona);
+            });
+        }
+    }
+
+    //
+    //Manejo de errores y excepciones
+    //
+
+    public class PersonaDAOExceptionTest {
+
+    private PersonaDAO personaDAO;
+
+    @BeforeEach
+    void setUp() {
+        personaDAO = new PersonaDAO();
+    }
+
+    @Test
+    void testBuscarIdInexistente() {
+        Persona persona = personaDAO.getById(99999);
+        assertNull(persona);
+    }
+
+    @Test
+    void testEliminarIdInexistente() {
+        assertDoesNotThrow(() -> personaDAO.delete(99999));
+    }
+
+    @Test
+    void testActualizarIdInexistente() {
+        Persona persona = new Persona(99999, "Carlos", 40);
+        assertDoesNotThrow(() -> personaDAO.update(persona));
+    }
+
+    @Test
+    void testErrorConexion() {
+        PersonaDAO daoConError = new PersonaDAO("jdbc:mysql://localhost:3307/mydb", "root", "wrongpass");
+
+        Persona persona = new Persona(0, "Test", 20);
+
+        assertThrows(Exception.class, () -> {
+            daoConError.create(persona);
+        });
+    }
+}
 }
