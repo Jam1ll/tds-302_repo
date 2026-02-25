@@ -16,7 +16,6 @@ public class PersonaDAOTest {
 
     private PersonaDAO dao;
     
-    // Herramientas para capturar los System.out.println
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final PrintStream standardOut = System.out;
 
@@ -31,9 +30,7 @@ public class PersonaDAOTest {
         System.setOut(standardOut);
     }
 
-    // ==========================================
-    // MÉTODOS AUXILIARES (Para no repetir código)
-    // ==========================================
+    // MÉTODOS AUXILIARES 
     
     // Obtiene el ID del último registro insertado
     private int getUltimoId() throws Exception {
@@ -46,9 +43,7 @@ public class PersonaDAOTest {
         return -1;
     }
 
-    // ==========================================
-    // 1. PRUEBAS PARA CREATE (INSERT)
-    // ==========================================
+// CREATE
 
     @Test
     public void TC_C01_InsertarRegistroValido() throws Exception {
@@ -65,7 +60,6 @@ public class PersonaDAOTest {
         assertEquals("Laura", insertada.getNombre());
         assertEquals(28, insertada.getEdad());
 
-        // Limpieza
         dao.delete(id);
     }
 
@@ -82,31 +76,25 @@ public class PersonaDAOTest {
         
         assertEquals("José María-López", insertada.getNombre());
 
-        // Limpieza
         dao.delete(id);
     }
 
-    // ==========================================
-    // 2. PRUEBAS PARA READ (CONSULTAR)
-    // ==========================================
+    // READ
 
     @Test
     public void TC_R01_ConsultarRegistroExistente() throws Exception {
-        // Preparamos un dato temporal
         Persona p = new Persona();
         p.setNombre("Temporal Read");
         p.setEdad(50);
         dao.create(p);
         int id = getUltimoId();
 
-        // Ejecutamos el Read
         Persona leida = dao.read(id);
 
         assertNotNull(leida);
         assertEquals("Temporal Read", leida.getNombre());
         assertEquals(id, leida.getId());
 
-        // Limpieza
         dao.delete(id);
     }
 
@@ -119,7 +107,6 @@ public class PersonaDAOTest {
 
     @Test
     public void TC_R03_ListarTodos() throws Exception {
-        // Insertamos al menos uno para asegurar que la lista tenga datos
         Persona p = new Persona();
         p.setNombre("Para Lista");
         p.setEdad(20);
@@ -131,36 +118,31 @@ public class PersonaDAOTest {
         assertNotNull(lista, "La lista no debe ser null");
         assertTrue(lista.size() >= 1, "La lista debe tener al menos 1 elemento");
 
-        // Limpieza
         dao.delete(id);
     }
 
-    // ==========================================
-    // 3. PRUEBAS PARA UPDATE (ACTUALIZAR)
-    // ==========================================
+
+    // UPDATE
+
 
     @Test
     public void TC_U01_ActualizarRegistroExistente() throws Exception {
-        // 1. Insertamos dato inicial
         Persona p = new Persona();
         p.setNombre("Juan");
         p.setEdad(45);
         dao.create(p);
         int id = getUltimoId();
 
-        // 2. Lo actualizamos
         Persona pActualizar = new Persona();
         pActualizar.setId(id);
         pActualizar.setNombre("Juan Carlos");
         pActualizar.setEdad(46);
         dao.update(pActualizar);
 
-        // 3. Verificamos los cambios
         Persona verificacion = dao.read(id);
         assertEquals("Juan Carlos", verificacion.getNombre());
         assertEquals(46, verificacion.getEdad());
 
-        // 4. Limpieza
         dao.delete(id);
     }
 
@@ -171,44 +153,35 @@ public class PersonaDAOTest {
         p.setNombre("Fantasma");
         p.setEdad(30);
 
-        // No debe lanzar excepciones ni romper el programa
         assertDoesNotThrow(() -> {
             dao.update(p);
         });
     }
 
-    // ==========================================
-    // 4. PRUEBAS PARA DELETE (ELIMINAR)
-    // ==========================================
+    // DELETE
 
     @Test
     public void TC_D01_EliminarRegistroExistente() throws Exception {
-        // Insertamos temporal
         Persona p = new Persona();
         p.setNombre("Para Borrar");
         p.setEdad(18);
         dao.create(p);
         int id = getUltimoId();
 
-        // Lo borramos
         dao.delete(id);
 
-        // Verificamos que ya no existe
         Persona leida = dao.read(id);
         assertNull(leida, "El registro debería haber sido eliminado y retornar null.");
     }
 
     @Test
     public void TC_D02_EliminarRegistroInexistente() throws Exception {
-        // Intentar borrar ID que no existe no debe lanzar excepción
         assertDoesNotThrow(() -> {
             dao.delete(99999);
         });
     }
 
-    // ==========================================
-    // 5. PRUEBAS DE VALIDACIÓN DE ENTRADAS
-    // ==========================================
+    // VALIDACIÓN DE ENTRADAS
 
     @Test
     public void TC_V01_EvitarObjetoNulo() throws Exception {
