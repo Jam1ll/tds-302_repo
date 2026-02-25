@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
-public class PersonaDAOTest {
+public class PersonaDAOTests {
 
     private PersonaDAO dao;
     
@@ -32,7 +32,6 @@ public class PersonaDAOTest {
 
     // MÉTODOS AUXILIARES 
     
-    // Obtiene el ID del último registro insertado
     private int getUltimoId() throws Exception {
         Connection conn = PersonaDAO.getConnection();
         Statement stmt = conn.createStatement();
@@ -100,7 +99,6 @@ public class PersonaDAOTest {
 
     @Test
     public void TC_R02_ConsultarRegistroInexistente() throws Exception {
-        // Usamos un ID exageradamente alto que no exista
         Persona leida = dao.read(99999);
         assertNull(leida, "Al buscar un ID que no existe, debe retornar null.");
     }
